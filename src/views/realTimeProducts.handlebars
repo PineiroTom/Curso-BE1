@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos en Tiempo Real</title>
+  <!-- Se carga Socket.IO (se inyecta automáticamente desde /socket.io/socket.io.js) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Conectamos con el servidor de WebSocket
+    const socket = io();
+
+    // Función para renderizar la lista de productos
+    function renderProducts(products) {
+      const productsList = document.getElementById('productsList');
+      productsList.innerHTML = ''; // Limpiamos el contenedor
+      products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.classList.add('product');
+        productElement.innerHTML = `
+          <h3>${product.title}</h3>
+          <p><strong>ID:</strong> ${product.id}</p>
+          <p><strong>Descripción:</strong> ${product.description}</p>
+          <p><strong>Precio:</strong> $${product.price}</p>
+          <hr>
+        `;
+        productsList.appendChild(productElement);
+      });
+    }
+
+    // Escuchamos el evento que emite el servidor con la lista actualizada de productos
+    socket.on('updateProducts', (products) => {
+      renderProducts(products);
+    });
+  </script>
+</head>
+<body>
+  <h1>Productos en Tiempo Real</h1>
+  <div id="productsList">
+    {{#each products}}
+      <div class="product">
+        <h3>{{this.title}}</h3>
+        <p><strong>ID:</strong> {{this.id}}</p>
+        <p><strong>Descripción:</strong> {{this.description}}</p>
+        <p><strong>Precio:</strong> ${{this.price}}</p>
+        <hr>
+      </div>
+    {{/each}}
+  </div>
+</body>
+</html>
