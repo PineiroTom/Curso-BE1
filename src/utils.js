@@ -1,3 +1,14 @@
+//Nos crea una variable __dirname que nos da la RUTA de nuestro archivo app.js
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default __dirname;
+
+
+//funcion para generar un numero aleatorio
 const generarUnNumeroAleatorio = (min,max) => Math.floor(Math.random() * (max-min+1)) + 1;
 
 export const generarNumerosAleatorios = cantidad => {
@@ -9,3 +20,4 @@ export const generarNumerosAleatorios = cantidad => {
         resolve(numeros);
     })
 }
+

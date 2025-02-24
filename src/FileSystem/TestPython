@@ -1,0 +1,9 @@
+def promedio_notas(notas):
+    return sum(notas) / len(notas)
+
+
+notas = [10, 9, 8, 7, 6]
+
+promedio = promedio_notas(notas)
+
+print(f"El promedio de las notas es: {promedio}")  # El promedio   

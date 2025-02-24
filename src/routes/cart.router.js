@@ -6,17 +6,22 @@ const router = Router();
 const carts = [];
 
 //Metodo POST para crear un carrito
-router.post('/', (req,res) => {
-    const newID = generarNumerosAleatorios();
+router.post('/', async (req,res) => {
+    try {
+        const newID =  await generarNumerosAleatorios();
 
-    const newCart = {
-        id: newID,
-        products: []
+        const newCart = {
+            id: newID,
+            products: []
+        }
+
+        carts.push(newCart);
+
+        res.status(201).json({message: 'Carrito creado exitosamente', cart:newCart})
     }
-
-    carts.push(newCart);
-
-    res.status(201).json({message: 'Carrito creado exitosamente', cart:newCart})
+    catch (error) {
+        res.status(500).json({message: 'Error al crear el carrito', error:error.message})
+    }
 });
 
 //Metodo GET para obtener los prods de un carrito especifico 
