@@ -1,16 +1,28 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
 import __dirname from './utils.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const urlMongo = process.env.URI_MONGO; // Se conecta a la url de la base de datos en el archivo .env
+const PORT = process.env.PORT; // Se conecta al puerto en el archivo .env
 
 //Importar routers
 import viewsRouter from './routes/views.router.js';
 import realTimeProductsRouter from './routes/realTimeProducts.router.js';
+import productRouter from './routes/product.router.js';
+import cartRouter from './routes/cart.router.js';
 
 //Importar el constructor de servidor de sockets
 import { Server } from 'socket.io';
+import { mongo } from 'mongoose';
 
 const app = express(); // Se asocia a app el kit de herramientas de Express
-const PORT = 8080;
+
+mongoose.connect(urlMongo)
+  .then(() => console.log("Conectado a la base de datos"))
+  .catch( (error) => console.log("Error al conectar a la base de datos:"+error) );
 
 // Middlewares para parsear JSON y datos URL-encoded (se definen una sola vez), estas analizan el cuerpo de las solicitudes.
 app.use(express.json()); //Se puede recibir JSON al momento de hacer solicitudes.
@@ -28,40 +40,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.use('/', viewsRouter);
 app.use('/realtimeproducts', realTimeProductsRouter);
-
-// Solo prueba.
-const products = [
-    {
-      id: 1,
-      title: "Mouse Gamer RGB",
-      description: "Mouse óptico con iluminación RGB y 6 botones programables.",
-      code: "MOU123",
-      price: 3999,
-      status: "Disponible",
-      stock: 25,
-      category: "Periféricos"
-    },
-    {
-      id: 2,
-      title: "Teclado Mecánico",
-      description: "Teclado mecánico con switches rojos y retroiluminación.",
-      code: "TEC456",
-      price: 7499,
-      status: "Disponible",
-      stock: 12,
-      category: "Periféricos"
-    },
-    {
-      id: 3,
-      title: "Monitor 24'' LED",
-      description: "Monitor LED Full HD con panel IPS y 75Hz.",
-      code: "MON789",
-      price: 24999,
-      status: "Disponible",
-      stock: 8,
-      category: "Monitores"
-    }
-  ];
+app.use('/api/products', productRouter)
+app.use('/api/carts', cartRouter);
   
 // Crear el servidor HTTP a partir de la aplicación Express
 

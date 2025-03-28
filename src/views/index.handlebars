@@ -1,4 +1,36 @@
-<p> Todo listo para trabajar con WebSocket </p>
+<h1>Products</h1>
 
-<script src="/socket.io/socket.io.js"></script><!-- Incorporamos Socket.IO - la capacidad de establecer conexiones con socket -->
-<script src="/js/index.js"></script><!-- Incorporamos el archivo de JavaScript que contiene la lógica de cliente para WebSocket -->
+{{#if payload}}
+  <ul>
+    {{#each payload}}
+      <li>
+        <a href="/api/products/{{this._id}}"><h2>{{this.title}}</h2></a>
+                <p>{{this.description}}</p>
+                <p>Price: {{this.price}}</p>
+                <p>Stock: {{this.stock}}</p>
+                <p>Category: {{this.category}}</p>
+                <form action="/api/carts/{{../cartId}}/product/{{this._id}}?cartId={{../cartId}}" method="post">
+                    <button type="submit">Add to Cart</button>
+                </form>
+                <a href="/api/products/{{this._id}}?cartId={{../cartId}}">View Details</a>
+              </li>
+            {{/each}}
+          </ul>
+
+  <div>
+    {{#if hasPrevPage}}
+      <a href="{{prevLink}}">Previous Page</a>
+    {{/if}}
+
+    <span>Page {{page}} of {{totalPages}}</span>
+
+    {{#if hasNextPage}}
+      <a href="{{nextLink}}">Next Page</a>
+    {{/if}}
+  </div>
+{{else}}
+  <p>No products found.</p>
+{{/if}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
